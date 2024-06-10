@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Target : MonoBehaviour
 {
-    Rigidbody rigidbody;
+    Rigidbody _rigidbody;
     [SerializeField]
     float minForce = 10, maxForce = 12;
     [SerializeField]
@@ -22,9 +22,9 @@ public class Target : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody= GetComponent<Rigidbody>();
-        rigidbody.AddForce(Vector3.up * RandomForce(), ForceMode.Impulse);
-        rigidbody.AddTorque(RandomVector3());
+        _rigidbody= GetComponent<Rigidbody>();
+        _rigidbody.AddForce(Vector3.up * RandomForce(), ForceMode.Impulse);
+        _rigidbody.AddTorque(RandomVector3());
         gameManager = FindObjectOfType<GameManager>();
     }
 

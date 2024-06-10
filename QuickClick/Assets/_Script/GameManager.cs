@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -64,5 +65,10 @@ public class GameManager : MonoBehaviour
         gameOverCanvas.gameObject.SetActive(true);
         healt = 0;
         healtText.text = healt.ToString();
+    }
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
