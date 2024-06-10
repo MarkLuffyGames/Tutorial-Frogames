@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
     List<GameObject> targets;
 
     int score = 0;
+    int maxScore = 0;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI maxScoreText;
     int healt = 3;
     public TextMeshProUGUI healtText;
 
@@ -49,9 +51,18 @@ public class GameManager : MonoBehaviour
 
     public void UpdateScore(int scoreToAdd)
     {
-        
         score += scoreToAdd;
         scoreText.text = score.ToString();
+
+        maxScore = PlayerPrefs.GetInt("MAX_SCORE", 0);
+
+        if (score > maxScore)
+        {
+            maxScore = score;
+            PlayerPrefs.SetInt("MAX_SCORE", maxScore);
+        }
+
+        maxScoreText.text = maxScore.ToString();
     }
 
     public void UpdateHealt()
