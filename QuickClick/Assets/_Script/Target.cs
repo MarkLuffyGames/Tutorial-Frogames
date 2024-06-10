@@ -41,7 +41,7 @@ public class Target : MonoBehaviour
             Random.Range(-torque, torque));
     }
 
-    private void OnMouseDown()
+    private void OnMouseOver()
     {
         if (!gameManager.gameOver && isGood)
         {

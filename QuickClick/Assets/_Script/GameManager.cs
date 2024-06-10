@@ -15,14 +15,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI healtText;
 
     public Canvas gameOverCanvas;
+    public Canvas menu;
+    public Canvas ui;
     public bool gameOver = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private float spawnRate = 1;
+
+    private void Start()
     {
-        InvokeRepeating("SpawnManager", 2, 1);
-        UpdateScore(score);
+        ui.gameObject.SetActive(false);
         gameOverCanvas.gameObject.SetActive(false);
+    }
+    public void StartGame(int difficulty)
+    {
+        menu.gameObject.SetActive(false);
+        ui.gameObject.SetActive(true);
+        spawnRate /= difficulty;
+        InvokeRepeating("SpawnManager", 1, spawnRate);
+        UpdateScore(score);
         gameOver = false;
     }
 
