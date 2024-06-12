@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
         bool isWalking = hasHorizontalInput || hasVerticalInput;
         _animator.SetBool("IsWalking",isWalking);
 
-        Vector3 desiredFoward = Vector3.RotateTowards(transform.forward, movememt, turnSpeed * Time.deltaTime, 0);
+        Vector3 desiredFoward = Vector3.RotateTowards(transform.forward, movememt, turnSpeed * Time.fixedDeltaTime, 0);
 
         rotation = Quaternion.LookRotation(desiredFoward);
         
