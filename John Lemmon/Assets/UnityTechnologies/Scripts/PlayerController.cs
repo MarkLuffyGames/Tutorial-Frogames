@@ -10,11 +10,14 @@ public class PlayerController : MonoBehaviour
     Animator _animator;
     Rigidbody _rb;
 
+    private AudioSource _audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -35,6 +38,18 @@ public class PlayerController : MonoBehaviour
 
         rotation = Quaternion.LookRotation(desiredFoward);
         
+        if(isWalking)
+        {
+            if (!_audioSource.isPlaying)
+            {
+
+                _audioSource.Play();
+            }
+        }
+        else
+        {
+            _audioSource.Stop();
+        }
     }
 
     private void OnAnimatorMove()

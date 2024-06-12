@@ -9,37 +9,54 @@ public class GameEnding : MonoBehaviour
     public float fadeDuration = 1f;
     public GameObject player;
     public CanvasGroup endingLevelCanvas;
+    public CanvasGroup caughtCanvas;
+    public AudioSource exitAudio, caugthAudio;
 
-    private bool isGameOver;
+    private bool hasAudioPlayed;
+    private bool isPlayerExit, isPlayerCaught;
     private float timer;
-    private float displayImagenDuration = 1f;
-
-
+    private float displayImagenDuration = 2f;
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject == player)
         {
-            isGameOver = true;
+            isPlayerExit = true;
         }
     }
 
     private void Update()
     {
-        if(isGameOver)
+        if(isPlayerExit)
         {
-            timer += Time.deltaTime;
-            endingLevelCanvas.alpha = timer / fadeDuration;
-
-            if(timer > fadeDuration + displayImagenDuration)
-            {
-                EndingLevel();
-            }
+            EndLevel(endingLevelCanvas, exitAudio);
+        }
+        else if(isPlayerCaught)
+        {
+            EndLevel(caughtCanvas, caugthAudio);
         }
     }
 
-    void EndingLevel()
+    void EndLevel(CanvasGroup imageCanvas, AudioSource audioSource)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        timer += Time.deltaTime;
+        imageCanvas.alpha = timer / fadeDuration;
+
+        if (!hasAudioPlayed)
+        {
+            hasAudioPlayed = true;
+            audioSource.Play();
+        }
+
+        if (timer > fadeDuration + displayImagenDuration)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        
+    }
+
+    public void CatchPlayer()
+    {
+        isPlayerCaught = true;
     }
 }
