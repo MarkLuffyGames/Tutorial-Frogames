@@ -25,7 +25,7 @@ public class Tower : MonoBehaviour
     {
         timeSinceLastShot += Time.deltaTime;
 
-        if (reloadTime >= timeSinceLastShot)
+        if (reloadTime <= timeSinceLastShot)
         {
             Collider2D[] hitCollider = Physics2D.OverlapCircleAll(transform.position, shotRange);
 

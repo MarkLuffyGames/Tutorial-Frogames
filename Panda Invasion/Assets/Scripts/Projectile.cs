@@ -30,4 +30,13 @@ public class Projectile : MonoBehaviour
     {
         this.direction = direction;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Enemy"))
+        {
+            collision.GetComponent<Enemy>().RecibeDamage(damage);
+            Destroy(gameObject);
+        }
+    }
 }

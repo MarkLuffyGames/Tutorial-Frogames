@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1634728532383073367}
   - component: {fileID: 931866871295008404}
   - component: {fileID: 1944711111811329607}
+  - component: {fileID: 4996442825772520107}
   m_Layer: 0
   m_Name: Chocolate_Cupcake_Tower_0
   m_TagString: Tower
@@ -107,3 +108,30 @@ MonoBehaviour:
   - {fileID: 21300008, guid: b8d8be413e32742309deff69988ac54f, type: 3}
   - {fileID: 21300010, guid: b8d8be413e32742309deff69988ac54f, type: 3}
   isUpgradable: 1
+--- !u!50 &4996442825772520107
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661014697862380919}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
