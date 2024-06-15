@@ -5,9 +5,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float healt;
-    private float speed;
+    [SerializeField] private float speed;
     private Animator _animator;
     private BoxCollider2D _boxCollider;
+    private bool isDead;
     [SerializeField]private int currentWayPoint;
 
     private void Start()
@@ -24,6 +25,7 @@ public class Enemy : MonoBehaviour
         {
             healt = 0;
             _boxCollider.enabled = false;
+            isDead = true;
             _animator.SetTrigger("Dead");
         }
         else
@@ -37,6 +39,7 @@ public class Enemy : MonoBehaviour
         if (currentWayPoint == GameManager.Instance.wayPoints.Length)
         {
             Eat();
+            return;
         }
 
         float distance = Vector2.Distance(transform.position,
@@ -48,7 +51,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Move(GameManager.Instance.wayPoints[currentWayPoint].transform.position);
+            if(!isDead)Move(GameManager.Instance.wayPoints[currentWayPoint].transform.position);
         }
     }
 
