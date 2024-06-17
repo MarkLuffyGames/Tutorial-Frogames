@@ -19,7 +19,7 @@ public class Healt : MonoBehaviour
     public void Hit(float damage, Vector3 position)
     {
         currentHealt -= damage;
-        if(currentHealt < 0)
+        if(currentHealt <= 0)
         {
             currentHealt = 0;
             StartCoroutine(Dead());

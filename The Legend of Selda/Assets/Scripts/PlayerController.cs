@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private Vector2 lastMove;
     private bool walking;
+    private bool canMove = true;
+    private bool canAttack = true;
 
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject virtualCamera;
@@ -40,11 +42,22 @@ public class PlayerController : MonoBehaviour
         inputPlayer = new Controls();
         inputPlayer.Enable();
 
+        inputPlayer.Player.Attack.started += Attack_started;
+
+    }
+
+    private void Attack_started(InputAction.CallbackContext obj)
+    {
+        if (!canAttack) return;
+        canMove = false;
+        canAttack = false;
+        _rb.velocity = Vector2.zero;
+        _animator.SetTrigger("Attack");
     }
 
     private void FixedUpdate()
     {
-        Move();
+        if(canMove) Move();
     }
 
     private void Move()
@@ -59,12 +72,12 @@ public class PlayerController : MonoBehaviour
         else
         {
             walking = false;
-            _animator.SetFloat("LastH", lastMove.x);
-            _animator.SetFloat("LastV", lastMove.y);
         }
 
         _animator.SetFloat("Horizontal", move.x);
         _animator.SetFloat("Vertical", move.y);
+        _animator.SetFloat("LastH", lastMove.x);
+        _animator.SetFloat("LastV", lastMove.y);
         _animator.SetBool("Walking", walking);
 
 
@@ -82,5 +95,11 @@ public class PlayerController : MonoBehaviour
     public Controls GetInputPlayer()
     {
         return inputPlayer;
+    }
+
+    public void ActiveMove()
+    {
+        canMove = true;
+        canAttack = true;
     }
 }
