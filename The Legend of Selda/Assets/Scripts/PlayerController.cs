@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,22 +6,40 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 5;
+    public static bool playerCreated;
+    private float speed = 5;
     private Vector2 move;
     private Controls inputPlayer;
     private Animator _animator;
     private Rigidbody2D _rb;
-
     private Vector2 lastMove;
     private bool walking;
 
+    [SerializeField] private GameObject mainCamera;
+    [SerializeField] private GameObject virtualCamera;
+
     private void Awake()
     {
+        if (!playerCreated)
+        {
+            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(mainCamera);
+            DontDestroyOnLoad(virtualCamera);
+            playerCreated = true;
+        }
+        else
+        {
+            Destroy(gameObject);
+            Destroy(mainCamera);
+            Destroy(virtualCamera);
+        }
+
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
         
         inputPlayer = new Controls();
         inputPlayer.Enable();
+
     }
 
     private void FixedUpdate()
@@ -50,5 +69,18 @@ public class PlayerController : MonoBehaviour
 
 
         _rb.velocity = move * speed;
+    }
+
+    public void SetNewPosition(Vector3 position)
+    {
+        transform.position = position;
+        virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = false;
+        virtualCamera.transform.position = position + Vector3.back * 10;
+        virtualCamera.GetComponent<CinemachineVirtualCamera>().enabled = true;
+    }
+
+    public Controls GetInputPlayer()
+    {
+        return inputPlayer;
     }
 }
