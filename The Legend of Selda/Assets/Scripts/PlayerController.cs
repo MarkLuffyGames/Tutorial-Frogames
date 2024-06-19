@@ -71,29 +71,21 @@ public class PlayerController : MonoBehaviour
 
             if (Mathf.Abs(move.x) > Mathf.Abs(move.y))
             {
-                _animator.SetFloat("Horizontal", new Vector2(move.x,0).normalized.x);
-                _animator.SetFloat("Vertical", 0);
-                lastMove = new Vector2(move.x, 0).normalized;
+                SetHorizontal();
             }
             else if (Mathf.Abs(move.x) < Mathf.Abs(move.y))
             {
-                _animator.SetFloat("Vertical", new Vector2(move.y, 0).normalized.x);
-                _animator.SetFloat("Horizontal", 0);
-                lastMove = new Vector2(0, move.y).normalized;
+                SetVertical();
             }
             else
             {
                 if (Mathf.Abs(lastMove.x) > Mathf.Abs(lastMove.y))
                 {
-                    _animator.SetFloat("Horizontal", new Vector2(move.x, 0).normalized.x);
-                    _animator.SetFloat("Vertical", 0);
-                    lastMove = new Vector2(move.x, 0).normalized;
+                    SetHorizontal();
                 }
                 else
                 {
-                    _animator.SetFloat("Vertical", new Vector2(move.y, 0).normalized.x);
-                    _animator.SetFloat("Horizontal", 0);
-                    lastMove = new Vector2(0, move.y).normalized;
+                    SetVertical();
                 }
             }
 
@@ -115,6 +107,20 @@ public class PlayerController : MonoBehaviour
 
 
         _rb.velocity = move * speed;
+    }
+
+    private void SetHorizontal()
+    {
+        _animator.SetFloat("Horizontal", new Vector2(move.x, 0).normalized.x);
+        _animator.SetFloat("Vertical", 0);
+        lastMove = new Vector2(move.x, 0).normalized;
+    }
+
+    private void SetVertical()
+    {
+        _animator.SetFloat("Vertical", new Vector2(move.y, 0).normalized.x);
+        _animator.SetFloat("Horizontal", 0);
+        lastMove = new Vector2(0, move.y).normalized;
     }
 
     public void SetNewPosition(Vector3 position)
