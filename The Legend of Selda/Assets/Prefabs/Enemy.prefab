@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 9004069717414369525}
   - component: {fileID: 6279670794788268087}
   - component: {fileID: 4177379483702497172}
+  - component: {fileID: 8276743650396115468}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -204,3 +205,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+--- !u!114 &8276743650396115468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8326261760276906433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb66d93f2e8cec942831cc853439dde1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealt: 30
+  currentHealt: 0
+  hitTime: 0
+  ParticleSystem: {fileID: 1053949834603460858, guid: 3ab819c0db266bb47b24840883de9bd7, type: 3}

@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
+
+        lastMove = Vector2.down;
         
         inputPlayer = new Controls();
         inputPlayer.Enable();
@@ -66,16 +68,47 @@ public class PlayerController : MonoBehaviour
 
         if (move != Vector2.zero)
         {
-            lastMove = move;
+
+            if (Mathf.Abs(move.x) > Mathf.Abs(move.y))
+            {
+                _animator.SetFloat("Horizontal", new Vector2(move.x,0).normalized.x);
+                _animator.SetFloat("Vertical", 0);
+                lastMove = new Vector2(move.x, 0).normalized;
+            }
+            else if (Mathf.Abs(move.x) < Mathf.Abs(move.y))
+            {
+                _animator.SetFloat("Vertical", new Vector2(move.y, 0).normalized.x);
+                _animator.SetFloat("Horizontal", 0);
+                lastMove = new Vector2(0, move.y).normalized;
+            }
+            else
+            {
+                if (Mathf.Abs(lastMove.x) > Mathf.Abs(lastMove.y))
+                {
+                    _animator.SetFloat("Horizontal", new Vector2(move.x, 0).normalized.x);
+                    _animator.SetFloat("Vertical", 0);
+                    lastMove = new Vector2(move.x, 0).normalized;
+                }
+                else
+                {
+                    _animator.SetFloat("Vertical", new Vector2(move.y, 0).normalized.x);
+                    _animator.SetFloat("Horizontal", 0);
+                    lastMove = new Vector2(0, move.y).normalized;
+                }
+            }
+
             walking = true;
         }
         else
         {
             walking = false;
+
+            _animator.SetFloat("Vertical", 0);
+            _animator.SetFloat("Horizontal", 0);
         }
 
-        _animator.SetFloat("Horizontal", move.x);
-        _animator.SetFloat("Vertical", move.y);
+        
+        
         _animator.SetFloat("LastH", lastMove.x);
         _animator.SetFloat("LastV", lastMove.y);
         _animator.SetBool("Walking", walking);

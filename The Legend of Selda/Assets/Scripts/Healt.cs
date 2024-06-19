@@ -6,8 +6,8 @@ public class Healt : MonoBehaviour
 {
     [SerializeField] private float maxHealt = 100.0f;
     [SerializeField] private float currentHealt;
-
-    [SerializeField] private float hitTime;
+    [SerializeField] private float hitTime = 0.07f;
+    [SerializeField] private GameObject ParticleSystem;
 
     private Rigidbody2D _Rigidbody;
 
@@ -50,11 +50,18 @@ public class Healt : MonoBehaviour
             playerController.enabled = false;
         }
 
+        EnamyMove enemyMove;
+        if (TryGetComponent<EnamyMove>(out enemyMove))
+        {
+            enemyMove.enabled = false;
+        }
 
-        while(timeCount < hitTime)
+        _Rigidbody.velocity = Vector3.zero;
+
+        while (timeCount < hitTime)
         {
             timeCount += Time.fixedDeltaTime;
-            _Rigidbody.AddForce(dir * 5, ForceMode2D.Impulse);
+            _Rigidbody.velocity = dir * 10;
             yield return new WaitForFixedUpdate();
         }
 
@@ -62,14 +69,22 @@ public class Healt : MonoBehaviour
         {
             playerController.enabled = true;
         }
+        if (enemyMove != null)
+        {
+            enemyMove.enabled = true;
+        }
+
+        _Rigidbody.velocity = Vector3.zero;
     }
 
     IEnumerator Dead()
     {
+        Instantiate(ParticleSystem,transform.position,Quaternion.identity);
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        Collider2D collider = GetComponent<Collider2D>();
         spriteRenderer.enabled = false;
-        yield return new WaitForSeconds(5);
-        spriteRenderer.enabled = true;
-        currentHealt = maxHealt;
+        collider.enabled = false;
+        yield return new WaitForSeconds(3);
+        Destroy(gameObject);
     }
 }
