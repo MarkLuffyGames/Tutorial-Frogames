@@ -15,6 +15,7 @@ public class EnamyMove : MonoBehaviour
     public Vector2 moveDirection;
 
     private Rigidbody2D _rigidbody2D;
+    private Animator _animator;
 
     private void Start()
     {
@@ -25,6 +26,8 @@ public class EnamyMove : MonoBehaviour
 
         _rigidbody2D.velocity = Vector2.zero;
         _rigidbody2D.gravityScale = 0;
+
+        _animator = GetComponent<Animator>();
     }
     private void Update()
     {
@@ -52,5 +55,8 @@ public class EnamyMove : MonoBehaviour
                 moveDelayCounter = moveDelay * Random.Range(0.5f, 1.6f);
             }
         }
+
+        _animator.SetFloat("Horizontal", moveDirection.x);
+        _animator.SetFloat("Vertical",moveDirection.y);
     }
 }
