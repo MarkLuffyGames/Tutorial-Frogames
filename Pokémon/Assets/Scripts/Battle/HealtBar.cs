@@ -11,31 +11,50 @@ public class HealtBar : MonoBehaviour
 
 
     [SerializeField]private int MaxHP;
-    [SerializeField]private int currentHP;
+    [SerializeField]private float currentHP;
 
-    public void SetHP(int hp, int maxHP)
+    [SerializeField] private float updateSpeed;
+    [SerializeField] private Sprite[] sprites;
+
+    public void SetHP(float hp, int maxHP)
     {
         currentHP = hp;
         MaxHP = maxHP;
 
-        healtBar.fillAmount = currentHP / (float)MaxHP;
-        if(healtNumber != null) healtNumber.text = $"{currentHP}/{MaxHP}";
+        healtBar.fillAmount = currentHP / MaxHP;
+        if(healtNumber != null) healtNumber.text = $"{(int)currentHP}/{MaxHP}";
+
+        if(healtBar.fillAmount >= 0.5f)
+        {
+            healtBar.sprite = sprites[0];
+        }
+        else if(healtBar.fillAmount <= 0.15f)
+        {
+            healtBar.sprite = sprites[2];
+        }
+        else
+        {
+            healtBar.sprite = sprites[1];
+        }
     }
 
     public IEnumerator UpdateHealt(int hp)
     {
+
         while(currentHP > hp)
         {
-            currentHP--;
-            SetHP(currentHP, MaxHP);
+            currentHP -= Time.deltaTime * 10;
+            SetHP(currentHP < hp ? hp:currentHP, MaxHP);
             yield return null;
         }
         
         while(currentHP < hp)
         {
-            currentHP++;
+            currentHP += Time.deltaTime;
             SetHP(currentHP, MaxHP);
             yield return null;
         }
+
+        currentHP = hp;
     }
 }

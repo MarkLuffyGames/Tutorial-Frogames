@@ -254,11 +254,18 @@ public class BattleManager : MonoBehaviour
             $"{playerUnit.pokemon.Base.PokemonName} a usado " +
             $"{playerUnit.pokemon.Moves[currentSelectedMovement].MoveBase.MoveName}");
 
-        rivalHUD.UpdateData(rivalUnit.pokemon.HP);
+        playerUnit.AnimationAttack();
 
-        if(rivalIsFainted)
+        yield return new WaitForSeconds(0.5f);
+
+        rivalUnit.AnimationRecibeDamage();
+
+        yield return StartCoroutine(rivalHUD.UpdateData(rivalUnit.pokemon.HP));
+
+        if (rivalIsFainted)
         {
             yield return battleDialogBox.SetDialog($"{rivalUnit.pokemon.Base.PokemonName} se ah debilitado");
+            rivalUnit.AnimationFainted();
         }
     }
 
@@ -281,11 +288,18 @@ public class BattleManager : MonoBehaviour
             $"{rivalUnit.pokemon.Base.PokemonName} a usado " +
             $"{rivalUnit.pokemon.Moves[randomMove].MoveBase.MoveName}");
 
-        playerHUD.UpdateData(playerUnit.pokemon.HP);
+        rivalUnit.AnimationAttack();
+
+        yield return new WaitForSeconds(0.5f);
+
+        playerUnit.AnimationRecibeDamage();
+
+        yield return StartCoroutine(playerHUD.UpdateData(playerUnit.pokemon.HP));
 
         if (playerIsFainted)
         {
             yield return battleDialogBox.SetDialog($"{playerUnit.pokemon.Base.PokemonName} se ah debilitado");
+            playerUnit.AnimationFainted();
         }
     }
 }

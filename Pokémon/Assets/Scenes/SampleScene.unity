@@ -4614,6 +4614,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healtBar: {fileID: 789988772}
   healtNumber: {fileID: 0}
+  MaxHP: 0
+  currentHP: 0
 --- !u!224 &874480104
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35957,6 +35959,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healtBar: {fileID: 896557032}
   healtNumber: {fileID: 1959119351}
+  MaxHP: 0
+  currentHP: 0
 --- !u!114 &1660270860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37989,8 +37993,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32a50a1fdadb31c4b96a25a01487c0e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonBase: {fileID: 11400000, guid: ff28ae14b5442784ca7909bbce9f2939, type: 2}
-  level: 3
+  pokemonBase: {fileID: 11400000, guid: 5f3f6868f6ad17b429c9459222b58fd8, type: 2}
+  level: 5
   isPlayer: 0
 --- !u!1 &1959119349
 GameObject:
@@ -38289,8 +38293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32a50a1fdadb31c4b96a25a01487c0e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonBase: {fileID: 11400000, guid: 91773462564ba3943ab6bb2d1f014ddf, type: 2}
-  level: 7
+  pokemonBase: {fileID: 11400000, guid: ff28ae14b5442784ca7909bbce9f2939, type: 2}
+  level: 5
   isPlayer: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

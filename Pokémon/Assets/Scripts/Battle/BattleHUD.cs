@@ -16,9 +16,9 @@ public class BattleHUD : MonoBehaviour
         healtBar.SetHP(pokemon.HP, pokemon.maxHP);
     }
 
-    public void UpdateData(int hp)
+    public IEnumerator UpdateData(int hp)
     {
-        StartCoroutine(healtBar.UpdateHealt(hp));
+        yield return StartCoroutine(healtBar.UpdateHealt(hp));
     }
 
 }
