@@ -283,15 +283,15 @@ public class BattleManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        defender.AnimationRecibeDamage();
+
+        yield return StartCoroutine(defenderHUD.UpdateData(defender.pokemon.HP));
+
         if (damageDescription.type != "")
         {
             yield return battleDialogBox.SetDialog(
             $"El ataque es {damageDescription.type}.");
         }
-
-        defender.AnimationRecibeDamage();
-
-        yield return StartCoroutine(defenderHUD.UpdateData(defender.pokemon.HP));
 
         if (damageDescription.Critical)
         {
@@ -299,12 +299,10 @@ public class BattleManager : MonoBehaviour
             $"Ha sido un golpe crítico.");
         }
 
-        
-
         if (isfainted)
         {
             this.isFainted = true;
-            yield return battleDialogBox.SetDialog($"{defender.pokemon.Base.PokemonName} se a debilitado");
+            yield return battleDialogBox.SetDialog($"{defender.pokemon.Base.PokemonName} se a debilitado.");
             defender.AnimationFainted();
         }
     }
