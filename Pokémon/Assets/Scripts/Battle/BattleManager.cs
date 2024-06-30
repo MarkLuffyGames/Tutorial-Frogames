@@ -276,18 +276,46 @@ public class BattleManager : MonoBehaviour
     {
         state = BattleState.RivalAction;
 
-        int randomMove = Random.Range(0, rivalUnit.pokemon.Moves.Count);
+        Move randomMove = RandomMove(rivalUnit.pokemon.Moves);
 
-        if (rivalUnit.pokemon.Moves[randomMove].MoveBase.MoveClass != MoveClass.Status)
+        if (randomMove.MoveBase.MoveClass != MoveClass.Status)
         {
             yield return StartCoroutine(DamageMove(
-                rivalUnit, playerUnit, playerHUD, rivalUnit.pokemon.Moves[randomMove]));
+                rivalUnit, playerUnit, playerHUD, randomMove));
         }
         else
         {
             
         }
 
+    }
+
+    private Move RandomMove(List<Move> moves)
+    {
+        int random = Random.Range(0, moves.Count);
+        if (moves[random].PowerPoints > 0)
+        {
+            return moves[random];
+        }
+        else
+        {
+            bool remainPP = false;
+            foreach (Move move in moves)
+            {
+                if(move.PowerPoints > 0)
+                {
+                    remainPP = true;
+                    break;
+                }
+            }
+            if (remainPP)
+            {
+                return RandomMove(moves);
+            }
+            
+        }
+
+        return null;
     }
 
     private IEnumerator DamageMove(BattleUnit attacker, BattleUnit defender, BattleHUD defenderHUD, Move move)
