@@ -147,7 +147,15 @@ public class BattleManager : MonoBehaviour
     {
         if (select.WasPressedThisFrame())
         {
-            StartCoroutine(ExecuteActions());
+            if (playerUnit.pokemon.Moves[currentSelectedMovement].PowerPoints > 0)
+            {
+                StartCoroutine(ExecuteActions());
+            }
+            else
+            {
+                //No quedan PP.
+            }
+            
         }
 
         if (back.WasPressedThisFrame())
@@ -284,6 +292,8 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator DamageMove(BattleUnit attacker, BattleUnit defender, BattleHUD defenderHUD, Move move)
     {
+        move.PowerPoints--;
+
         var damageDescription = defender.pokemon.RecibeDamage(move, attacker.pokemon);
         var isfainted = damageDescription.IsFainted;
 
