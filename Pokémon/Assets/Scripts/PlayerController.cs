@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,13 +19,15 @@ public class PlayerController : MonoBehaviour
     public LayerMask collisionLayer;
     public LayerMask pokemonLayer;
 
+    public event Action OnPokemonEncountered;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         move = InputSystem.actions.FindAction("Move");
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         GetInput();
         Move();
@@ -120,7 +124,7 @@ public class PlayerController : MonoBehaviour
         {
             if(Random.Range(0,100) < 15)
             {
-                Debug.Log("Comenzar batalla pokemon");
+                OnPokemonEncountered();
             }
         }
     }

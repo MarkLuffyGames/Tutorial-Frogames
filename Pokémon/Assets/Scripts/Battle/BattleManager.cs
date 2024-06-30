@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public enum BattleState
 {
@@ -36,7 +38,9 @@ public class BattleManager : MonoBehaviour
 
     private bool isFainted;
 
-    private void Start()
+    public event Action<bool> OnFinishedBattle;
+
+    public void HandleStartBattle()
     {
         moveMenu = InputSystem.actions.FindAction("MoveMenu");
         select = InputSystem.actions.FindAction("Select");
@@ -86,7 +90,7 @@ public class BattleManager : MonoBehaviour
         battleDialogBox.SelectedMovement(currentSelectedMovement, playerUnit.pokemon.Moves[currentSelectedMovement]);
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
 
         switch (state)
@@ -231,7 +235,15 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            
+            isFainted = false;
+            if(playerUnit.pokemon.HP == 0)
+            {
+                OnFinishedBattle(false);
+            }
+            else
+            {
+                OnFinishedBattle(true);
+            }
         }
         
     }
@@ -290,13 +302,13 @@ public class BattleManager : MonoBehaviour
         if (damageDescription.type != "")
         {
             yield return battleDialogBox.SetDialog(
-            $"El ataque es {damageDescription.type}.");
+            $"¡El ataque es {damageDescription.type}!");
         }
 
         if (damageDescription.Critical)
         {
             yield return battleDialogBox.SetDialog(
-            $"Ha sido un golpe crítico.");
+            $"¡Ha sido un golpe crítico!");
         }
 
         if (isfainted)

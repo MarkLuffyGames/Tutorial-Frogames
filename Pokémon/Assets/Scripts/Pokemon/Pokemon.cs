@@ -125,11 +125,11 @@ public class Pokemon
     }
 
     public int maxHP => CalculateHP();
-    public int Attack => CalculateStat(_base.Attack, ivStats.Attack, evStats.Attack, NatureMultiplier(Nature.Adamant, "Attack"));
-    public int Defense => CalculateStat(_base.Defense, ivStats.Defense, evStats.Defense, NatureMultiplier(Nature.Adamant, "Defense"));
-    public int SpecialAttack => CalculateStat(_base.SpAttack, ivStats.SpecialAttack, evStats.SpecialAttack, NatureMultiplier(Nature.Adamant, "SpecialAttack"));
-    public int SpecialDefense => CalculateStat(_base.SpDefense, ivStats.SpecialDefense, evStats.SpecialDefense, NatureMultiplier(Nature.Adamant, "SpecialDefense"));
-    public int Speed => CalculateStat(_base.Speed, ivStats.Speed, evStats.Speed, NatureMultiplier(Nature.Adamant, "Speed"));
+    public int Attack => CalculateStat(_base.Attack, ivStats.Attack, evStats.Attack, NatureMultiplier(nature, "Attack"));
+    public int Defense => CalculateStat(_base.Defense, ivStats.Defense, evStats.Defense, NatureMultiplier(nature, "Defense"));
+    public int SpecialAttack => CalculateStat(_base.SpAttack, ivStats.SpecialAttack, evStats.SpecialAttack, NatureMultiplier(nature, "SpecialAttack"));
+    public int SpecialDefense => CalculateStat(_base.SpDefense, ivStats.SpecialDefense, evStats.SpecialDefense, NatureMultiplier(nature, "SpecialDefense"));
+    public int Speed => CalculateStat(_base.Speed, ivStats.Speed, evStats.Speed, NatureMultiplier(nature, "Speed"));
 
 
 

@@ -23,7 +23,7 @@ public class BattleUnit : MonoBehaviour
     public void SetupPokemon()
     {
         pokemon = new Pokemon(pokemonBase, level);
-
+        pokemonImage.DOFade(1, 0);
         pokemonImage.sprite = isPlayer ? pokemonBase.BackSprite : pokemonBase.FrontSprite;
         AnimationStartBattle();
     }
