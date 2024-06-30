@@ -17,8 +17,9 @@ MonoBehaviour:
     en cada turno. El efecto se transfiere con Relevo, es eliminado con Giro R\xE1pido
     y reflejado con Espejom\xE1gico y Capa M\xE1gica. Su efecto aumenta un 30% con
     Ra\xEDz Grande. No afecta a Pok\xE9mon del tipo Planta."
-  moveType: 4
+  moveType: 5
   moveClass: 2
   power: 0
   accuracy: 90
   pp: 10
+  priority: 0

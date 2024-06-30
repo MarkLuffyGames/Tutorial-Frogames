@@ -70,20 +70,58 @@ public class Pokemon
         }
     }
 
-    public bool RecibeDamage(Move move, Pokemon pokemon)
+    public DamageDescription RecibeDamage(Move move, Pokemon pokemon)
     {
-        int modifier = 1;
-        int damageBase = (2 * pokemon.Level / 5 + 2) * move.MoveBase.Power * (move.MoveBase.MoveClass == MoveClass.Physical ? pokemon.Attack / Defense : pokemon.SpecialAttack / SpecialDefense) / 50 + 2;
-        int damge = damageBase * modifier;
+        float typeEffectiveness = PokemonTypeChart.GetEffectiveness(move.MoveBase.MoveType, _base.Type1)
+            * PokemonTypeChart.GetEffectiveness(move.MoveBase.MoveType, _base.Type2);
+
+        float STAB = move.MoveBase.MoveType == pokemon.Base.Type1 || move.MoveBase.MoveType == pokemon.Base.Type2
+            ? 1.5f : 1.0f;
+        float random = Random.Range(85, 101) / 100f;
+
+        float critical = Random.Range(0, 100) < 6 ? 1.5f : 1.0f;
+
+        float modifier = typeEffectiveness * STAB * random * critical;
+
+
+        float damageBase = (2 * pokemon.Level / 5f + 2) * move.MoveBase.Power * (move.MoveBase.MoveClass == MoveClass.Physical ? pokemon.Attack / (float)Defense : pokemon.SpecialAttack / (float)SpecialDefense) / 50f + 2;
+        int damge = Mathf.FloorToInt(damageBase * modifier);
+
+        string returnType = "";
+        if(typeEffectiveness == 0)
+        {
+            returnType = "inmune";
+        }
+        else if(typeEffectiveness == 0.25f)
+        {
+            returnType = "muy poco efectivo";
+        }
+        else if (typeEffectiveness == 0.5f)
+        {
+            returnType = "poco efectivo";
+        }
+        else if (typeEffectiveness == 1.0f)
+        {
+            returnType = "";
+        }
+        else if (typeEffectiveness == 2.0f)
+        {
+            returnType = "efectivo";
+        }
+        else if (typeEffectiveness == 4.0f)
+        {
+            returnType = "muy efectivo";
+        }
+
 
         HP -= damge;
         if(HP <= 0)
         {
             HP = 0;
-            return true;
+            return new DamageDescription(critical == 1.5f ? true : false, true, returnType);
         }
 
-        return false;
+        return new DamageDescription(critical == 1.5f ? true : false, false, returnType); ;
     }
 
     public int maxHP => CalculateHP();
@@ -218,4 +256,18 @@ public enum Nature
     Sassy,
     Careful,
     Quirky
+}
+
+public class DamageDescription
+{
+    public bool Critical;
+    public bool IsFainted;
+    public string type;
+
+    public DamageDescription(bool critical, bool isFainted, string type)
+    {
+        Critical = critical;
+        IsFainted = isFainted;
+        this.type = type;
+    }
 }

@@ -34,8 +34,7 @@ public class BattleManager : MonoBehaviour
     private InputAction select;
     private InputAction back;
 
-    private bool playerIsFainted;
-    private bool rivalIsFainted;
+    private bool isFainted;
 
     private void Start()
     {
@@ -218,15 +217,15 @@ public class BattleManager : MonoBehaviour
         if(playerFirst)
         {
             yield return StartCoroutine(PlayerAttack());
-            if(!rivalIsFainted) yield return StartCoroutine(RivalAttack());
+            if(!isFainted) yield return StartCoroutine(RivalAttack());
         }
         else
         {
             yield return StartCoroutine(RivalAttack());
-            if(!playerIsFainted) yield return StartCoroutine(PlayerAttack());
+            if(!isFainted) yield return StartCoroutine(PlayerAttack());
         }
 
-        if(!playerIsFainted && !rivalIsFainted)
+        if(!isFainted)
         {
             PlayerActionSelect();
         }
@@ -243,30 +242,14 @@ public class BattleManager : MonoBehaviour
 
         if (playerUnit.pokemon.Moves[currentSelectedMovement].MoveBase.MoveClass != MoveClass.Status)
         {
-            rivalIsFainted = rivalUnit.pokemon.RecibeDamage(playerUnit.pokemon.Moves[currentSelectedMovement], playerUnit.pokemon);
+            yield return StartCoroutine(DamageMove(
+                playerUnit, rivalUnit, rivalHUD, playerUnit.pokemon.Moves[currentSelectedMovement]));
         }
         else
         {
 
         }
 
-        yield return battleDialogBox.SetDialog(
-            $"{playerUnit.pokemon.Base.PokemonName} a usado " +
-            $"{playerUnit.pokemon.Moves[currentSelectedMovement].MoveBase.MoveName}");
-
-        playerUnit.AnimationAttack();
-
-        yield return new WaitForSeconds(0.5f);
-
-        rivalUnit.AnimationRecibeDamage();
-
-        yield return StartCoroutine(rivalHUD.UpdateData(rivalUnit.pokemon.HP));
-
-        if (rivalIsFainted)
-        {
-            yield return battleDialogBox.SetDialog($"{rivalUnit.pokemon.Base.PokemonName} se ah debilitado");
-            rivalUnit.AnimationFainted();
-        }
     }
 
     private IEnumerator RivalAttack()
@@ -277,29 +260,52 @@ public class BattleManager : MonoBehaviour
 
         if (rivalUnit.pokemon.Moves[randomMove].MoveBase.MoveClass != MoveClass.Status)
         {
-            playerIsFainted = playerUnit.pokemon.RecibeDamage(rivalUnit.pokemon.Moves[randomMove], rivalUnit.pokemon);
+            yield return StartCoroutine(DamageMove(
+                rivalUnit, playerUnit, playerHUD, rivalUnit.pokemon.Moves[randomMove]));
         }
         else
         {
-
+            
         }
 
-        yield return battleDialogBox.SetDialog(
-            $"{rivalUnit.pokemon.Base.PokemonName} a usado " +
-            $"{rivalUnit.pokemon.Moves[randomMove].MoveBase.MoveName}");
+    }
 
-        rivalUnit.AnimationAttack();
+    private IEnumerator DamageMove(BattleUnit attacker, BattleUnit defender, BattleHUD defenderHUD, Move move)
+    {
+        var damageDescription = defender.pokemon.RecibeDamage(move, attacker.pokemon);
+        var isfainted = damageDescription.IsFainted;
+
+        yield return battleDialogBox.SetDialog(
+            $"{attacker.pokemon.Base.PokemonName} a usado " +
+            $"{move.MoveBase.MoveName}.");
+
+        attacker.AnimationAttack();
 
         yield return new WaitForSeconds(0.5f);
 
-        playerUnit.AnimationRecibeDamage();
-
-        yield return StartCoroutine(playerHUD.UpdateData(playerUnit.pokemon.HP));
-
-        if (playerIsFainted)
+        if (damageDescription.type != "")
         {
-            yield return battleDialogBox.SetDialog($"{playerUnit.pokemon.Base.PokemonName} se ah debilitado");
-            playerUnit.AnimationFainted();
+            yield return battleDialogBox.SetDialog(
+            $"El ataque es {damageDescription.type}.");
+        }
+
+        defender.AnimationRecibeDamage();
+
+        yield return StartCoroutine(defenderHUD.UpdateData(defender.pokemon.HP));
+
+        if (damageDescription.Critical)
+        {
+            yield return battleDialogBox.SetDialog(
+            $"Ha sido un golpe crítico.");
+        }
+
+        
+
+        if (isfainted)
+        {
+            this.isFainted = true;
+            yield return battleDialogBox.SetDialog($"{defender.pokemon.Base.PokemonName} se a debilitado");
+            defender.AnimationFainted();
         }
     }
 }

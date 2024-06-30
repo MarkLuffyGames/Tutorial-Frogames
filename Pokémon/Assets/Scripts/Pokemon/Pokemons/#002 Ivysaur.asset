@@ -19,7 +19,7 @@ MonoBehaviour:
     al sol, ser\xE1 porque el bulbo est\xE1 a punto de hacerse una flor grande."
   frontSprite: {fileID: 21300000, guid: c0c05abde54d6924781daeab633cb3c2, type: 3}
   backSprite: {fileID: 21300000, guid: 4c3db608609381c46a1430e22c604646, type: 3}
-  type1: 4
+  type1: 5
   type2: 8
   maxHP: 60
   attack: 62

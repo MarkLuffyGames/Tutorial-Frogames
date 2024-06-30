@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: "L\xE1tigo Cepa"
   description: "Causa da\xF1o al objetivo con ramas. Produce contacto."
-  moveType: 4
+  moveType: 5
+  moveClass: 0
   power: 35
   accuracy: 100
   pp: 15
+  priority: 0

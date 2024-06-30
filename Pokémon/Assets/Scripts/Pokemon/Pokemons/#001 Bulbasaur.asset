@@ -19,7 +19,7 @@ MonoBehaviour:
     los rayos del sol."
   frontSprite: {fileID: 21300000, guid: 7669ccfe117732e4280aeec3cc9d763b, type: 3}
   backSprite: {fileID: 21300000, guid: cb825248f2f909d4c95b671b0ad61243, type: 3}
-  type1: 4
+  type1: 5
   type2: 8
   maxHP: 45
   attack: 49

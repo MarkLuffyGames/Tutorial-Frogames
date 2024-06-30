@@ -4616,6 +4616,11 @@ MonoBehaviour:
   healtNumber: {fileID: 0}
   MaxHP: 0
   currentHP: 0
+  updateSpeed: 0
+  sprites:
+  - {fileID: 1344275266, guid: 0c24c732d6b96f54b84d46c248c5fb1b, type: 3}
+  - {fileID: -1572026128, guid: 1dace89bb223028408cf027c35cf89a5, type: 3}
+  - {fileID: 1461630430, guid: 8b80c5820eb65404e982013f149a33ae, type: 3}
 --- !u!224 &874480104
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35961,6 +35966,11 @@ MonoBehaviour:
   healtNumber: {fileID: 1959119351}
   MaxHP: 0
   currentHP: 0
+  updateSpeed: 0
+  sprites:
+  - {fileID: 1344275266, guid: 0c24c732d6b96f54b84d46c248c5fb1b, type: 3}
+  - {fileID: -1572026128, guid: 1dace89bb223028408cf027c35cf89a5, type: 3}
+  - {fileID: 1461630430, guid: 8b80c5820eb65404e982013f149a33ae, type: 3}
 --- !u!114 &1660270860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38294,7 +38304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pokemonBase: {fileID: 11400000, guid: ff28ae14b5442784ca7909bbce9f2939, type: 2}
-  level: 5
+  level: 10
   isPlayer: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

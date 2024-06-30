@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: "Furia Drag\xF3n"
   description: Ataque que siempre quita 40 PS.
-  moveType: 16
+  moveType: 15
   moveClass: 1
   power: 0
   accuracy: 100
   pp: 10
+  priority: 0

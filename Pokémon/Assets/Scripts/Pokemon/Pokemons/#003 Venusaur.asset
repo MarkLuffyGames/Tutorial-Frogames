@@ -19,7 +19,7 @@ MonoBehaviour:
     delicado de la flor tiene un efecto relajante en el \xE1nimo de las personas."
   frontSprite: {fileID: 21300000, guid: 71506feaad993834ba369bc899e82786, type: 3}
   backSprite: {fileID: 21300000, guid: 0206075ba773f6149bac06feed245d98, type: 3}
-  type1: 4
+  type1: 5
   type2: 8
   maxHP: 80
   attack: 82

@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: Mordisco
   description: 30% de hacer retroceder al objetivo. Hace contacto.
-  moveType: 15
+  moveType: 16
+  moveClass: 0
   power: 60
   accuracy: 100
   pp: 25
+  priority: 0

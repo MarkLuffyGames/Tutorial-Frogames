@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: "Somn\xEDfero"
   description: Esparce polvo que puede dormir al enemigo.
-  moveType: 4
+  moveType: 5
   moveClass: 2
   power: 0
   accuracy: 75
   pp: 15
+  priority: 0
