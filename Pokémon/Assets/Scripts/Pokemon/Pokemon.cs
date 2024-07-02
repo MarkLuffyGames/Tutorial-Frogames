@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class Pokemon
 {
-    private PokemonBase _base;
-    private IVStats ivStats;
-    private EVStats evStats;
-    private Nature nature;
-    private int level;
+    [SerializeField] private PokemonBase _base;
+    [SerializeField] private IVStats ivStats;
+    [SerializeField] private EVStats evStats;
+    [SerializeField] private Nature nature;
+    [SerializeField] private int level;
 
     public PokemonBase Base => _base;
     public int Level
@@ -19,7 +20,7 @@ public class Pokemon
         set => level = value;
     }
 
-    private List<Move> moves;
+    [SerializeField] private List<Move> moves;
     public List<Move> Moves
     {
         get => moves; 
@@ -64,6 +65,26 @@ public class Pokemon
             }
 
             if(moves.Count > 3)
+            {
+                break;
+            }
+        }
+    }
+
+    public void InitPokemon()
+    {
+        hp = maxHP;
+
+        moves = new List<Move>();
+
+        foreach (var lMove in _base.LearnableMoves)
+        {
+            if (lMove.Level <= level)
+            {
+                moves.Add(new Move(lMove.Move));
+            }
+
+            if (moves.Count > 3)
             {
                 break;
             }
@@ -209,6 +230,7 @@ public class Pokemon
     }
 }
 
+[Serializable]
 public class IVStats
 {
     public int HP { get; set; }
@@ -219,6 +241,7 @@ public class IVStats
     public int Speed { get; set; }
 }
 
+[Serializable]
 public class EVStats
 {
     public int HP { get; set; }

@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class BattleUnit : MonoBehaviour
 {
-    public PokemonBase pokemonBase;
-    public int level;
     public bool isPlayer;
 
     private Image pokemonImage;
@@ -20,11 +18,11 @@ public class BattleUnit : MonoBehaviour
         initPosition = transform.localPosition;
         initialColor = pokemonImage.color;
     }
-    public void SetupPokemon()
+    public void SetupPokemon(Pokemon pokemon)
     {
-        pokemon = new Pokemon(pokemonBase, level);
-        pokemonImage.DOFade(1, 0);
-        pokemonImage.sprite = isPlayer ? pokemonBase.BackSprite : pokemonBase.FrontSprite;
+        this.pokemon = pokemon;
+        pokemonImage.color = initialColor;
+        pokemonImage.sprite = isPlayer ? pokemon.Base.BackSprite : pokemon.Base.FrontSprite;
         AnimationStartBattle();
     }
 

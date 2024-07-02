@@ -40,11 +40,20 @@ public class BattleManager : MonoBehaviour
 
     public event Action<bool> OnFinishedBattle;
 
-    public void HandleStartBattle()
+    private PokemonParty playerParty;
+    private Pokemon wildPokemon;
+
+    private void Start()
     {
         moveMenu = InputSystem.actions.FindAction("MoveMenu");
         select = InputSystem.actions.FindAction("Select");
         back = InputSystem.actions.FindAction("Back");
+    }
+
+    public void HandleStartBattle(PokemonParty playerParty, Pokemon wildPokemon)
+    {
+        this.playerParty = playerParty;
+        this.wildPokemon = wildPokemon;
 
         StartCoroutine(SetupBattle());
     }
@@ -56,8 +65,8 @@ public class BattleManager : MonoBehaviour
         currentSelectedAction = 0;
         currentSelectedMovement = 0;
 
-        playerUnit.SetupPokemon();
-        rivalUnit.SetupPokemon();
+        playerUnit.SetupPokemon(playerParty.GetFirstNoFaintedPokemon());
+        rivalUnit.SetupPokemon(wildPokemon);
 
         playerHUD.SetPokemonData(playerUnit.pokemon);
         rivalHUD.SetPokemonData(rivalUnit.pokemon);
@@ -245,8 +254,21 @@ public class BattleManager : MonoBehaviour
         {
             isFainted = false;
             if(playerUnit.pokemon.HP == 0)
-            {
-                OnFinishedBattle(false);
+            {   
+                if(playerParty.GetFirstNoFaintedPokemon() != null)
+                {
+                    playerUnit.SetupPokemon(playerParty.GetFirstNoFaintedPokemon());
+                    playerHUD.SetPokemonData(playerUnit.pokemon);
+                    battleDialogBox.SetPokemonMovement(playerUnit.pokemon);
+
+                    yield return battleDialogBox.SetDialog($"¡Adelante {playerUnit.pokemon.Base.PokemonName}!");
+
+                    PlayerActionSelect();
+                }
+                else
+                {
+                    OnFinishedBattle(false);
+                }
             }
             else
             {
@@ -354,6 +376,7 @@ public class BattleManager : MonoBehaviour
             this.isFainted = true;
             yield return battleDialogBox.SetDialog($"{defender.pokemon.Base.PokemonName} se a debilitado.");
             defender.AnimationFainted();
+            yield return new WaitForSeconds(1.5f);
         }
     }
 }
