@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
@@ -39,25 +40,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 moveInput = move.ReadValue<Vector2>().normalized;
 
-        if(moveInput == Vector2.zero)
-        {
-            moveDirection = Vector2.zero;
-        }
-        else if (Mathf.Abs(moveInput.x) == Mathf.Abs(moveInput.y))
-        {
-            moveDirection = new Vector2(lastDirection.x, lastDirection.y).normalized;
-        }
-        else
-        {
-            if(Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
-            {
-                moveDirection = new Vector2(moveInput.x, 0).normalized;
-            }
-            else
-            {
-                moveDirection = new Vector2(0, moveInput.y).normalized;
-            }
-        }
+        moveDirection = OneDirectionMove.OneDirection(moveInput, lastDirection);
 
         animator.SetFloat("Horizontal", moveDirection.x);
         animator.SetFloat("Vertical", moveDirection.y);
@@ -125,6 +108,32 @@ public class PlayerController : MonoBehaviour
             if(Random.Range(0,100) < 15)
             {
                 OnPokemonEncountered();
+            }
+        }
+    }
+}
+
+public static class OneDirectionMove
+{
+    public static Vector2 OneDirection(Vector2 moveInput, Vector3 lastDirection)
+    {
+        if (moveInput == Vector2.zero)
+        {
+            return Vector2.zero;
+        }
+        else if (Mathf.Abs(moveInput.x) == Mathf.Abs(moveInput.y))
+        {
+            return new Vector2(lastDirection.x, lastDirection.y).normalized;
+        }
+        else
+        {
+            if (Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
+            {
+                return new Vector2(moveInput.x, 0).normalized;
+            }
+            else
+            {
+                return new Vector2(0, moveInput.y).normalized;
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -13,6 +14,7 @@ public enum BattleState
     ExecuteActions,
     PlayerAction,
     RivalAction,
+    SelectPokemon
 }
 public class BattleManager : MonoBehaviour
 {
@@ -26,6 +28,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private BattleHUD rivalHUD;
     [Tooltip("Caja de dialogo de la batalla.")]
     [SerializeField] private BattleDialogBox battleDialogBox;
+    [Tooltip("Menu de seleccion de Pokemons")]
+    [SerializeField] private PartyHUD playerPartyHUD;
 
     [SerializeField] private BattleState state;
 
@@ -48,6 +52,66 @@ public class BattleManager : MonoBehaviour
         moveMenu = InputSystem.actions.FindAction("MoveMenu");
         select = InputSystem.actions.FindAction("Select");
         back = InputSystem.actions.FindAction("Back");
+
+
+        moveMenu.performed += MoveMenu_performed;
+        select.started += Select_started;
+        back.started += Back_started;
+    }
+
+    private void MoveMenu_performed(InputAction.CallbackContext obj)
+    {
+        if (moveMenu.WasPressedThisFrame())
+        {
+            var noveDir = OneDirectionMove.OneDirection(moveMenu.ReadValue<Vector2>().normalized,Vector3.zero);
+            switch (state)
+            {
+                case BattleState.SelectPlayerAction:
+                    HandlePlayerActionSelection(noveDir);
+                    break;
+                case BattleState.SelectPlayerMovemet:
+                    HandlePlayerMovementSelection(noveDir);
+                    break;
+                case BattleState.SelectPokemon:
+                    HandleSelectPokemon(noveDir);
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+    }
+    private void Select_started(InputAction.CallbackContext obj)
+    {
+        switch (state)
+        {
+            case BattleState.SelectPlayerAction:
+                SelectAction();
+                break;
+            case BattleState.SelectPlayerMovemet:
+                SelectMovement();
+                break;
+            case BattleState.SelectPokemon:
+                StartCoroutine(SelectPokemon());
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void Back_started(InputAction.CallbackContext obj)
+    {
+        switch (state)
+        {
+            case BattleState.SelectPlayerMovemet:
+                PlayerActionSelect();
+                break;
+            case BattleState.SelectPokemon:
+                PlayerActionSelect();
+                break;
+            default:
+                break;
+        }
     }
 
     public void HandleStartBattle(PokemonParty playerParty, Pokemon wildPokemon)
@@ -83,6 +147,7 @@ public class BattleManager : MonoBehaviour
     {
         state = BattleState.SelectPlayerAction;
 
+        playerPartyHUD.gameObject.SetActive(false);
         battleDialogBox.ToggleDialogText(false);
         battleDialogBox.ToggleMovesBox(false);
         battleDialogBox.ToggleActionBox(true);
@@ -99,111 +164,90 @@ public class BattleManager : MonoBehaviour
         battleDialogBox.SelectedMovement(currentSelectedMovement, playerUnit.pokemon.Moves[currentSelectedMovement]);
     }
 
-    public void HandleUpdate()
+    private void SelectingPokemon()
     {
-
-        switch (state)
-        {
-            case BattleState.Start:
-                break;
-            case BattleState.SelectPlayerAction:
-                HandlePlayerActionSelection();
-                break;
-            case BattleState.SelectPlayerMovemet:
-                HandlePlayerMovementSelection();
-                break;
-            case BattleState.ExecuteActions:
-                break;
-            case BattleState.RivalAction:
-                break;
-            default:
-                break;
-        }
+        state = BattleState.SelectPokemon;
+        currentPokemonSelected = 0;
+        playerPartyHUD.gameObject.SetActive(true);
+        playerPartyHUD.SetPartyData(playerParty.Pokemons);
     }
 
-    private void HandlePlayerActionSelection()
+    private void HandlePlayerActionSelection(Vector2 moveDir)
     {
-        if (select.WasPressedThisFrame())
-        {
-
-            if(currentSelectedAction == 0)
-            {
-                PlayerMovement();
-            }
-            else if(currentSelectedAction == 1)
-            {
-                //Mochila
-            }
-            else if(currentSelectedAction == 2)
-            {
-                //Pokemon
-            }
-            else if(currentSelectedAction == 3)
-            {
-                //Huir
-            }
-        }
-
         if (moveMenu.ReadValue<Vector2>() == Vector2.zero) return;
 
-        Selector(ref currentSelectedAction, 3);
+        Selector(ref currentSelectedAction, 3, moveDir);
 
         battleDialogBox.SelectedAction(currentSelectedAction);
 
     } 
 
-    private void HandlePlayerMovementSelection()
+    private void SelectAction()
     {
-        if (select.WasPressedThisFrame())
+        if (currentSelectedAction == 0)
         {
-            if (playerUnit.pokemon.Moves[currentSelectedMovement].PowerPoints > 0)
-            {
-                StartCoroutine(ExecuteActions());
-            }
-            else
-            {
-                //No quedan PP.
-            }
-            
+            PlayerMovement();
         }
-
-        if (back.WasPressedThisFrame())
+        else if (currentSelectedAction == 1)
         {
-            PlayerActionSelect();
+            //Mochila
         }
+        else if (currentSelectedAction == 2)
+        {
+            SelectingPokemon();
+        }
+        else if (currentSelectedAction == 3)
+        {
+            OnFinishedBattle(false);
+        }
+    }
 
+    private void HandlePlayerMovementSelection(Vector2 moveDir)
+    {
         if (moveMenu.ReadValue<Vector2>() == Vector2.zero) return;
 
-        Selector(ref currentSelectedMovement, playerUnit.pokemon.Moves.Count -1);
+        Selector(ref currentSelectedMovement, playerUnit.pokemon.Moves.Count -1, moveDir);
 
         battleDialogBox.SelectedMovement(currentSelectedMovement, playerUnit.pokemon.Moves[currentSelectedMovement]);
 
     }
 
-    private void Selector( ref int index, int positionAmount)
+    private void SelectMovement()
     {
-        if (moveMenu.ReadValue<Vector2>() == Vector2.up)
+        if (playerUnit.pokemon.Moves[currentSelectedMovement].PowerPoints > 0)
+        {
+            StartCoroutine(ExecuteMovement());
+        }
+        else
+        {
+            //No quedan PP.
+        }
+    }
+
+    private void Selector( ref int index, int positionAmount, Vector2 moveDir)
+    {
+        if (moveDir == Vector2.up)
         {
             if (index == 2 || index == 3)
             {
                 index -= 2;
             }
         }
-        else if (moveMenu.ReadValue<Vector2>() == Vector2.down)
+        else if (moveDir == Vector2.down)
         {
             if (index == 0 || index == 1)
             {
                 if(index + 2 <= positionAmount) index += 2;
             }
         }
-        else if (moveMenu.ReadValue<Vector2>() == Vector2.left)
+        else if (moveDir == Vector2.left)
         {
             if (index == 1 || index == 3)
             {
                 index -= 1;
             }
         }
-        else if (moveMenu.ReadValue<Vector2>() == Vector2.right)
+        else if (moveDir == Vector2.right)
         {
             if (index == 0 || index == 2)
             {
@@ -212,7 +256,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ExecuteActions()
+    private IEnumerator ExecuteMovement()
     {
         state = BattleState.ExecuteActions;
 
@@ -289,7 +333,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-
+            // Ataques de Estado.
         }
 
     }
@@ -307,7 +351,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            
+            // Ataques de Estado.
         }
 
     }
@@ -378,5 +422,64 @@ public class BattleManager : MonoBehaviour
             defender.AnimationFainted();
             yield return new WaitForSeconds(1.5f);
         }
+    }
+
+
+    int currentPokemonSelected;
+    bool isBattlePokemon;
+    private void HandleSelectPokemon(Vector2 moveDir)
+    {
+        if (moveDir == Vector2.up)
+        {
+            if(isBattlePokemon) currentPokemonSelected = 0;
+            if(currentPokemonSelected == 0) isBattlePokemon = false;
+            currentPokemonSelected--;
+            if (currentPokemonSelected == 0) isBattlePokemon = true;
+            if (currentPokemonSelected < 0) currentPokemonSelected = playerParty.Pokemons.Count - 1;
+        }
+        else if (moveDir == Vector2.down)
+        {
+            if(isBattlePokemon) currentPokemonSelected = 0;
+            if (currentPokemonSelected == 0) isBattlePokemon = false;
+            currentPokemonSelected++;
+            if (currentPokemonSelected == 0) isBattlePokemon = true;
+            if (currentPokemonSelected > playerParty.Pokemons.Count - 1) currentPokemonSelected = 0;
+        }
+        else if (moveDir == Vector2.left)
+        {
+            if(currentPokemonSelected != playerParty.Pokemons.Count)
+            {
+                isBattlePokemon = true;
+            }
+            else
+            {
+                //Estoy en el boton exit.
+            }
+        }
+        else if (moveDir == Vector2.right)
+        {
+            isBattlePokemon = false;
+            if (currentPokemonSelected == 0) currentPokemonSelected++;
+        }
+
+
+        playerPartyHUD.SelectPokemon(isBattlePokemon ? 0 : currentPokemonSelected);
+    }
+
+    private IEnumerator SelectPokemon()
+    {
+        state = BattleState.ExecuteActions;
+        playerPartyHUD.gameObject.SetActive(false);
+        battleDialogBox.ToggleDialogText(true);
+        battleDialogBox.ToggleMovesBox(false);
+        battleDialogBox.ToggleActionBox(false);
+        yield return battleDialogBox.SetDialog($"Vuelva {playerUnit.pokemon.Base.PokemonName}.");
+        playerUnit.AnimationFainted();
+        yield return new WaitForSeconds(1);
+        yield return battleDialogBox.SetDialog($"Ve {playerParty.Pokemons[currentPokemonSelected].Base.PokemonName}");
+        playerUnit.SetupPokemon(playerParty.Pokemons[currentPokemonSelected]);
+        playerHUD.SetPokemonData(playerUnit.pokemon);
+        battleDialogBox.SetPokemonMovement(playerUnit.pokemon);
+        PlayerActionSelect();
     }
 }

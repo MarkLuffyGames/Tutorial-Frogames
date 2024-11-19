@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         }
         else if(gameState == GameState.Battle)
         {
-            battleManager.HandleUpdate();
+            //battleManager.HandleUpdate();
         }
     }
 }
