@@ -1779,8 +1779,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerUnit: {fileID: 2135750867}
   rivalUnit: {fileID: 1943054273}
-  playerHUD: {fileID: 479166892}
-  rivalHUD: {fileID: 1142193887}
   battleDialogBox: {fileID: 1556667311}
   playerPartyHUD: {fileID: 968920341}
   state: 0
@@ -43633,6 +43631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  battleHUD: {fileID: 1142193887}
   pokemon:
     _base: {fileID: 0}
     nature: 0
@@ -44894,6 +44893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
+  battleHUD: {fileID: 479166892}
   pokemon:
     _base: {fileID: 0}
     nature: 0

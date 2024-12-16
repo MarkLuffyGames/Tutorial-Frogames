@@ -9,8 +9,11 @@ public class BattleUnit : MonoBehaviour
     private Image pokemonImage;
     private Vector2 initPosition;
     private Color initialColor;
+    [SerializeField]private BattleHUD battleHUD;
 
     public Pokemon pokemon;
+
+    public BattleHUD BattleHUD => battleHUD;
 
     private void Awake()
     {
@@ -24,6 +27,8 @@ public class BattleUnit : MonoBehaviour
         pokemonImage.color = initialColor;
         pokemonImage.sprite = isPlayer ? pokemon.Base.BackSprite : pokemon.Base.FrontSprite;
         AnimationStartBattle();
+
+        battleHUD.SetPokemonData(pokemon);
     }
 
     public void AnimationStartBattle()

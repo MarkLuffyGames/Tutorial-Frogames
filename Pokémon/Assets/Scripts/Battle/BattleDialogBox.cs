@@ -23,9 +23,9 @@ public class BattleDialogBox : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ppText;
     [SerializeField] private TextMeshProUGUI typeText;
 
-    private void Start()
+    public void StartBattle()
     {
-        ToggleDialogText(true );
+        ToggleDialogText(true);
         ToggleActionBox(false);
         ToggleMovesBox(false);
     }
